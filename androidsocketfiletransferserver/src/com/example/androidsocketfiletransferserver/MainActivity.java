@@ -5,12 +5,14 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
+import java.util.ArrayList;
 import java.util.Enumeration;
 
 import android.support.v7.app.ActionBarActivity;
@@ -140,11 +142,22 @@ public class MainActivity extends ActionBarActivity {
 			byte[] bytes = new byte[(int) file.length()];
 			BufferedInputStream bis;
 			try {
-				bis = new BufferedInputStream(new FileInputStream(file));
-				bis.read(bytes, 0, bytes.length);
-				OutputStream os = socket.getOutputStream();
-				os.write(bytes, 0, bytes.length);
-				os.flush();
+				// bis = new BufferedInputStream(new FileInputStream(file));
+				// bis.read(bytes, 0, bytes.length);
+				// OutputStream os = socket.getOutputStream();
+				// os.write(bytes, 0, bytes.length);
+				// os.flush();
+
+				ArrayList<String> my = new ArrayList<String>();
+				my.add(0, "Bernard");
+				my.add(1, "Grey");
+				try {
+					ObjectOutputStream objectOutput = new ObjectOutputStream(
+							socket.getOutputStream());
+					objectOutput.writeObject(my);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 				socket.close();
 
 				final String sentMsg = "File sent to: "

@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">androidsocketfiletransferclient</string>
+    <string name="app_name">Team6 Peer</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+    <string name="title_activity_my_shared_files">MySharedFilesActivity</string>
+    <string name="title_activity_tracker_file_list">TrackerFileListActivity</string>
 
 </resources>
