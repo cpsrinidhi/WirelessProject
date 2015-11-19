@@ -19,12 +19,20 @@
         android:id="@+id/infoport"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:text="Port"
         android:textStyle="italic" />
 
     <TextView
         android:id="@+id/infoip"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:text="IP"
         android:textStyle="italic" />
+
+    <ListView
+        android:id="@+id/listViewPeerFiles"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+    </ListView>
 
 </LinearLayout>

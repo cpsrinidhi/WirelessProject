@@ -14,7 +14,6 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
-@SuppressWarnings("deprecation")
 public class MySharedFilesActivity extends Activity {
 
 	ListView listViewMyShareFiles;
@@ -32,10 +31,10 @@ public class MySharedFilesActivity extends Activity {
 
 		File f = new File(path);
 		final File[] fileList = f.listFiles();
-//		for (int i = 0; i < fileList.length; i++) {
-//			Toast.makeText(getApplicationContext(), fileList[i].getName(),
-//					Toast.LENGTH_LONG).show();
-//		}
+		// for (int i = 0; i < fileList.length; i++) {
+		// Toast.makeText(getApplicationContext(), fileList[i].getName(),
+		// Toast.LENGTH_LONG).show();
+		// }
 
 		final ArrayList<String> list = new ArrayList<String>();
 		for (int i = 0; i < fileList.length; i++) {
@@ -47,9 +46,8 @@ public class MySharedFilesActivity extends Activity {
 			Log.i("MySharedFilesActivity - ", "Added data to list " + fileName);
 		}
 
-		final StableArrayAdapter adapter = new StableArrayAdapter(
-				this, android.R.layout.simple_list_item_1,
-				list);
+		final StableArrayAdapter adapter = new StableArrayAdapter(this,
+				android.R.layout.simple_list_item_1, list);
 		listViewMyShareFiles.setAdapter(adapter);
 	}
 
