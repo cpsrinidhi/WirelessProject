@@ -2,6 +2,7 @@ package com.example.androidsocketfiletransferclient;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -18,6 +19,8 @@ import android.widget.Toast;
 public class TrackerFileListActivity extends Activity {
 	ArrayList<String> trackerFileList;
 	ListView listViewTrackerFiles;
+	String ip;
+	ArrayList<String> list;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -26,11 +29,35 @@ public class TrackerFileListActivity extends Activity {
 
 		listViewTrackerFiles = (ListView) findViewById(R.id.listViewTrackerFiles);
 
-		String ip = getIntent().getStringExtra("ip");
+		try {
+			ip = getIntent().getStringExtra("ip");
+			list = getIntent().getStringArrayListExtra("list");
 
-		ClientRxThread clientRxThread = new ClientRxThread(ip, 8080);
+			if (ip.equalsIgnoreCase("9999")) {
+				Log.i("TFLA", ip);
+				if (!list.isEmpty()) {
+					final StableArrayAdapter adapter = new StableArrayAdapter(
+							TrackerFileListActivity.this,
+							android.R.layout.simple_list_item_1, list);
+					listViewTrackerFiles.setAdapter(adapter);
+				}
+			} else {
+				Log.i("TFLA", ip);
+				
+				Toast.makeText(getApplicationContext(), ip, Toast.LENGTH_LONG);
 
-		clientRxThread.start();
+				ClientRxThread clientRxThread = new ClientRxThread(ip, 8080);
+
+				clientRxThread.start();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			Log.i("TFLA", "NPE");
+		}
+
+		// ClientRxThread clientRxThread = new ClientRxThread(ip, 8080);
+		//
+		// clientRxThread.start();
 	}
 
 	private class StableArrayAdapter extends ArrayAdapter<String> {
@@ -78,12 +105,27 @@ public class TrackerFileListActivity extends Activity {
 
 				trackerFileList = new ArrayList<String>();
 				try {
+					ObjectOutputStream objectOutput = new ObjectOutputStream(
+							socket.getOutputStream());
+					try {
+						objectOutput.writeObject(list);
+						objectOutput.close();
+					} catch (Exception e) {
+						Log.e("Peer TFLA", e.getMessage());
+					}
+				} catch (IOException e) {
+					System.out
+							.println("The socket for reading the object has problem");
+					e.printStackTrace();
+				}
+				try {
 					ObjectInputStream objectInput = new ObjectInputStream(
 							socket.getInputStream());
 					try {
 						Object object = objectInput.readObject();
 						trackerFileList = (ArrayList<String>) object;
 						System.out.println("Client " + trackerFileList.get(1));
+						objectInput.close();
 
 						TrackerFileListActivity.this
 								.runOnUiThread(new Runnable() {
@@ -107,7 +149,7 @@ public class TrackerFileListActivity extends Activity {
 					}
 				} catch (IOException e) {
 					System.out
-							.println("The socket for reading the object has problem");
+							.println("TFLA The socket for reading the object has problem");
 					e.printStackTrace();
 				}
 

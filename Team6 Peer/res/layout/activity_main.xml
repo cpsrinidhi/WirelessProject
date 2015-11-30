@@ -26,12 +26,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
-    <Button
+    <!-- <Button
         android:id="@+id/connect"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Get List from Tracker"
-        android:onClick="trackerFiles" />
+        android:onClick="trackerFiles" /> -->
 
     <Button
         android:id="@+id/buttonMyList"

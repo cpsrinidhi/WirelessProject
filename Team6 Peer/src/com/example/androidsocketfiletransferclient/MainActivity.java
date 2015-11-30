@@ -114,6 +114,7 @@ public class MainActivity extends Activity {
 		Log.i("Client", "moving to Tracker list");
 		Intent i = new Intent(this, TrackerFileListActivity.class);
 		i.putExtra("ip", editTextAddress.getText().toString());
+		i.putStringArrayListExtra("list", null);
 		startActivity(i);
 	}
 
@@ -123,6 +124,7 @@ public class MainActivity extends Activity {
 	}
 
 	private class ClientRxThread extends Thread {
+		ArrayList<String> someList;
 		String dstAddress;
 		int dstPort;
 
@@ -136,13 +138,14 @@ public class MainActivity extends Activity {
 			Socket socket = null;
 
 			try {
+				System.out.println(dstAddress + ":" + dstPort);
 				socket = new Socket(dstAddress, dstPort);
 
 				// File file = new
 				// File(Environment.getExternalStorageDirectory(),
 				// "test.txt");
 
-				byte[] bytes = new byte[1024];
+				// byte[] bytes = new byte[1024];
 				// InputStream is = socket.getInputStream();
 				// FileOutputStream fos = new FileOutputStream(file);
 				// BufferedOutputStream bos = new BufferedOutputStream(fos);
@@ -159,9 +162,9 @@ public class MainActivity extends Activity {
 				final ArrayList<String> list = new ArrayList<String>();
 				for (int i = 0; i < fileList.length; i++) {
 					String fileName = fileList[i].getName();
-					System.out
-							.println("inside for loop of converting values of i to string and splitting");
-					System.out.println("value of i" + fileName);
+					// System.out
+					// .println("inside for loop of converting values of i to string and splitting");
+					// System.out.println("value of i" + fileName);
 					list.add(IP + " : " + fileName);
 					Log.i("MySharedFilesActivity - ", "Added data to list "
 							+ fileName);
@@ -172,12 +175,33 @@ public class MainActivity extends Activity {
 							socket.getOutputStream());
 					try {
 						objectOutput.writeObject(list);
+						objectOutput.close();
 					} catch (Exception e) {
 						Log.e("Peer", e.getMessage());
 					}
 				} catch (IOException e) {
 					System.out
 							.println("The socket for reading the object has problem");
+					e.printStackTrace();
+				}
+				
+				try {
+					ObjectInputStream objectInput = new ObjectInputStream(
+							socket.getInputStream());
+					try {
+						Object object = objectInput.readObject();
+						final ArrayList<String> fromTrackerList = (ArrayList<String>) object;
+						someList = new ArrayList<String>();
+						for(int i=0;i<fromTrackerList.size();i++){
+							Log.i("Peer from tracker", fromTrackerList.get(i));
+							someList.add(fromTrackerList.get(i));
+						}
+					} catch (Exception e) {
+						Log.e("Peer", e.getMessage());
+					}
+				} catch (IOException e) {
+					System.out
+							.println("PEER The socket for reading the object has problem");
 					e.printStackTrace();
 				}
 
@@ -189,6 +213,13 @@ public class MainActivity extends Activity {
 					public void run() {
 						Toast.makeText(MainActivity.this, "Finished",
 								Toast.LENGTH_LONG).show();
+
+						Log.i("Client", "moving to Tracker list from thread");
+						Intent i = new Intent(MainActivity.this,
+								TrackerFileListActivity.class);
+						i.putExtra("ip", "9999");
+						i.putStringArrayListExtra("list", someList);
+						startActivity(i);
 					}
 				});
 
