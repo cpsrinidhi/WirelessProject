@@ -185,52 +185,44 @@ public class MainActivity extends Activity {
 
 			// Accept file list from peer
 			try {
-				Log.i("Server MA", "input");
 				ObjectInputStream objectInput = new ObjectInputStream(
 						socket.getInputStream());
 				try {
 					Object object = objectInput.readObject();
 					peerFileList = new ArrayList<String>();
 					peerFileList = (ArrayList<String>) object;
-					objectInput.close();
 
 					// synchronized (viewFileList) {
-					if (!peerFileList.isEmpty()) {
-						Iterator<String> i = peerFileList.iterator();
-						while (i.hasNext()) {
-							viewFileList.add(i.next());
+					Iterator<String> i = peerFileList.iterator();
+					while (i.hasNext()) {
+						viewFileList.add(i.next());
+					}
+					Log.i("Tracker", viewFileList.size() + " ");
+					// }
+					// System.out.println("From peer " + peerFileList.get(1));
+
+					MainActivity.this.runOnUiThread(new Runnable() {
+
+						@Override
+						public void run() {
+							final StableArrayAdapter adapter = new StableArrayAdapter(
+									MainActivity.this,
+									android.R.layout.simple_list_item_1,
+									viewFileList);
+							listViewPeerFiles.setAdapter(adapter);
 						}
-						Log.i("Tracker", viewFileList.size() + " ");
-						// }
-						// System.out.println("From peer " +
-						// peerFileList.get(1));
-					}
-
-					if (!peerFileList.isEmpty()) {
-						MainActivity.this.runOnUiThread(new Runnable() {
-
-							@Override
-							public void run() {
-								final StableArrayAdapter adapter = new StableArrayAdapter(
-										MainActivity.this,
-										android.R.layout.simple_list_item_1,
-										viewFileList);
-								listViewPeerFiles.setAdapter(adapter);
-							}
-						});
-					}
+					});
 
 				} catch (ClassNotFoundException e) {
 					System.out
 							.println("The title list has not come from the server");
 					e.printStackTrace();
 				} catch (Exception e) {
-					Log.e("Client", "Client exceptions");
-					e.printStackTrace();
+					Log.e("Client", e.getMessage());
 				}
 			} catch (IOException e) {
 				System.out
-						.println("SERVER The socket for reading the object has problem");
+						.println("The socket for reading the object has problem");
 				e.printStackTrace();
 			}
 			// finally {
@@ -250,21 +242,16 @@ public class MainActivity extends Activity {
 				// os.write(bytes, 0, bytes.length);
 				// os.flush();
 
-				// ArrayList<String> my = new ArrayList<String>();
-				// my.add(0, "Bernard");
-				// my.add(1, "Grey");
-				// for (int i = 0; i < viewFileList.size(); i++) {
-				// my.add(viewFileList.get(i));
-				// }
-
-				Log.i("Server MA", "output");
-
+				ArrayList<String> my = new ArrayList<String>();
+//				my.add(0, "Bernard");
+//				my.add(1, "Grey");
+				for (int i = 0; i < viewFileList.size(); i++) {
+					my.add(viewFileList.get(i));
+				}
 				try {
 					ObjectOutputStream objectOutput = new ObjectOutputStream(
 							socket.getOutputStream());
-					// objectOutput.writeObject(my);
-					objectOutput.writeObject(viewFileList);
-					objectOutput.close();
+					objectOutput.writeObject(my);
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
