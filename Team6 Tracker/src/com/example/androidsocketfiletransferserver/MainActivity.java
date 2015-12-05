@@ -149,8 +149,8 @@ public class MainActivity extends Activity {
 		public StableArrayAdapter(Context context, int textViewResourceId,
 				List<String> objects) {
 			super(context, textViewResourceId, objects);
-			Log.i("MySharedFilesActivity - ",
-					"Inside StableArrayAdapter constructor");
+//			Log.i("MySharedFilesActivity - ",
+//					"Inside StableArrayAdapter constructor");
 			for (int i = 0; i < objects.size(); ++i) {
 				mIdMap.put(objects.get(i), i);
 			}

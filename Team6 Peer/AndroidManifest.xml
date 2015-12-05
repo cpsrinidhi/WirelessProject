@@ -34,6 +34,9 @@
             android:name=".TrackerFileListActivity"
             android:label="@string/title_activity_tracker_file_list" >
         </activity>
+
+        <service android:name=".ServerSocketThread" >
+        </service>
     </application>
 
 </manifest>
