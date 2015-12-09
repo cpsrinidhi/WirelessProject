@@ -31,10 +31,6 @@ public class MySharedFilesActivity extends Activity {
 
 		File f = new File(path);
 		final File[] fileList = f.listFiles();
-		// for (int i = 0; i < fileList.length; i++) {
-		// Toast.makeText(getApplicationContext(), fileList[i].getName(),
-		// Toast.LENGTH_LONG).show();
-		// }
 
 		final ArrayList<String> list = new ArrayList<String>();
 		for (int i = 0; i < fileList.length; i++) {
